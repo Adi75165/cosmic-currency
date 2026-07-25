@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#05060a" />
+  <title>Cosmic Exchange</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="space" aria-hidden="true">
+    <div class="nebula nebula-a"></div>
+    <div class="nebula nebula-b"></div>
+    <div id="stars"></div>
+    <span class="shooting shooting-one"></span>
+    <span class="shooting shooting-two"></span>
+  </div>
+
+  <main class="app-shell">
+    <div class="app-content">
+      <header class="topbar">
+        <div class="brand"><span class="brand-dot"></span>COSMIC EXCHANGE</div>
+        <span class="live-badge">● Reference rates</span>
+      </header>
+
+      <nav class="tabbar" aria-label="Primary navigation">
+        <button class="tab-btn active" data-tab="converter">Converter</button>
+        <button class="tab-btn" data-tab="charts">Charts</button>
+      </nav>
+
+      <section class="glass-panel">
+        <div class="pair-row">
+          <button class="currency-select" data-picker="from">
+            <span class="select-label">FROM</span>
+            <span class="select-main">
+              <span class="flag" id="fromFlag">🇮🇳</span>
+              <span class="currency-text">
+                <strong id="fromCode">INR</strong>
+                <small id="fromName">Indian Rupee</small>
+              </span>
+              <span class="chev">⌄</span>
+            </span>
+          </button>
+
+          <button class="swap-btn" id="swapBtn" aria-label="Swap currencies">⇄</button>
+
+          <button class="currency-select" data-picker="to">
+            <span class="select-label">TO</span>
+            <span class="select-main">
+              <span class="flag" id="toFlag">🇺🇸</span>
+              <span class="currency-text">
+                <strong id="toCode">USD</strong>
+                <small id="toName">US Dollar</small>
+              </span>
+              <span class="chev">⌄</span>
+            </span>
+          </button>
+        </div>
+
+        <section id="converterView" class="view active">
+          <div class="converter-grid">
+            <div class="display-card">
+              <div class="display-top">
+                <span id="expressionLabel">INR amount</span>
+                <span id="loadingRate" class="spinner hidden">↻</span>
+              </div>
+
+              <div class="input-amount" id="inputAmount">₹0.00</div>
+              <div class="converted-amount" id="convertedAmount">Exchange rate unavailable</div>
+              <div class="conversion-line" id="conversionLine">Live conversion is currently unavailable.</div>
+              <div class="rate-line" id="rateLine">Loading latest reference rate…</div>
+            </div>
+
+            <div class="keypad" id="keypad">
+              <button class="calc-key key-util">AC</button>
+              <button class="calc-key key-util">+/−</button>
+              <button class="calc-key key-util">%</button>
+              <button class="calc-key key-op">÷</button>
+
+              <button class="calc-key">7</button>
+              <button class="calc-key">8</button>
+              <button class="calc-key">9</button>
+              <button class="calc-key key-op">×</button>
+
+              <button class="calc-key">4</button>
+              <button class="calc-key">5</button>
+              <button class="calc-key">6</button>
+              <button class="calc-key key-op">−</button>
+
+              <button class="calc-key">1</button>
+              <button class="calc-key">2</button>
+              <button class="calc-key">3</button>
+              <button class="calc-key key-op">+</button>
+
+              <button class="calc-key">0</button>
+              <button class="calc-key">.</button>
+              <button class="calc-key">⌫</button>
+              <button class="calc-key key-op">=</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="chartsView" class="view">
+          <div class="market-head">
+            <div>
+              <span class="eyebrow" id="pairLabel">INR / USD</span>
+              <h1><span id="marketRate">—</span> <small id="marketCode">USD</small></h1>
+              <p id="marketChange">Change unavailable</p>
+            </div>
+            <div class="pair-orb"><span id="chartFromFlag">🇮🇳</span><span>/</span><span id="chartToFlag">🇺🇸</span></div>
+          </div>
+
+          <div class="range-tabs">
+            <button data-range="1D">1D</button>
+            <button data-range="1W">1W</button>
+            <button class="active" data-range="1M">1M</button>
+            <button data-range="3M">3M</button>
+            <button data-range="1Y">1Y</button>
+            <button data-range="5Y">5Y</button>
+          </div>
+
+          <div class="chart-card">
+            <canvas id="rateChart"></canvas>
+            <div id="chartEmpty" class="chart-empty hidden">Historical rates unavailable</div>
+          </div>
+
+          <div class="stats-grid">
+            <div><span>Current rate</span><strong id="statCurrent">Unavailable</strong></div>
+            <div><span>Latest change</span><strong id="statChange">—</strong></div>
+            <div><span>Period high</span><strong id="statHigh">—</strong></div>
+            <div><span>Period low</span><strong id="statLow">—</strong></div>
+            <div class="wide"><span>Last reference date</span><strong id="statDate">Unavailable</strong></div>
+          </div>
+
+          <p class="micro-note">
+            Reference-rate data is used instead of fabricated market ticks. When data cannot be retrieved, the website shows it as unavailable.
+          </p>
+        </section>
+      </section>
+
+     
+    </div>
+  </main>
+
+  <div class="modal-backdrop hidden" id="currencyModal">
+    <div class="currency-sheet" role="dialog" aria-modal="true">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">
+        <div><span class="eyebrow">Choose currency</span><h2>Currency library</h2></div>
+        <button class="icon-btn" id="closeModal" aria-label="Close">×</button>
+      </div>
+      <label class="search-box">
+        <span>⌕</span>
+        <input id="currencySearch" type="search" placeholder="Search currencies…" />
+      </label>
+      <div class="currency-list" id="currencyList"></div>
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
